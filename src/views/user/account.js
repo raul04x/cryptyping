@@ -6,11 +6,12 @@ const Account = (props) => {
 
   const getAllBlockchains = async () => {
     const result = await DexTools.getAllBlockchains(0);
-    let chains = result.data.results;
+    console.log(result);
+    let chains = result.results;
 
-    for (let i = 1; i <= result.data.totalPages; i++) {
+    for (let i = 1; i <= result.totalPages; i++) {
       const temp = await DexTools.getAllBlockchains(i);
-      chains = chains.concat(temp.data.results);
+      chains = chains.concat(temp.results);
     }
 
     chains.sort((a, b) => {

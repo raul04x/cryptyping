@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 
+import DexTools, { ChainsEnabled } from "../../api/dextools";
+
 const BetForm = (props) => {
   const [bet, setBet] = useState({
     asset: "btc",
     bet: -1,
+    btcPrice: null,
+    etherPrice: null,
   });
 
   const configBet = (key, value) => {
@@ -16,8 +20,29 @@ const BetForm = (props) => {
     evt.preventDefault();
   };
 
+  const getPrices = async () => {
+    const formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+    const ether = await DexTools.getTokenPrice(
+      ChainsEnabled.ether.address,
+      ChainsEnabled.ether.id
+    );
+
+    const bitcoin = await DexTools.getTokenPrice(
+      ChainsEnabled.btc.address,
+      ChainsEnabled.btc.id
+    );
+
+    const temp = Object.assign({}, bet);
+    temp["etherPrice"] = formatter.format(ether.price);
+    temp["btcPrice"] = formatter.format(bitcoin.price);
+    setBet(temp);
+  };
+
   useEffect(() => {
-    
+    getPrices();
   }, []);
 
   return (
@@ -37,7 +62,7 @@ const BetForm = (props) => {
               {bet.asset === "ether" && (
                 <span className="material-symbols-rounded me-2">check</span>
               )}
-              Ethereum
+              <span>Ethereum {bet.etherPrice && bet.etherPrice}</span>
             </button>
             <button
               type="button"
@@ -49,7 +74,7 @@ const BetForm = (props) => {
               {bet.asset === "btc" && (
                 <span className="material-symbols-rounded me-2">check</span>
               )}
-              <span>Bitcoin</span>
+              <span>Bitcoin {bet.btcPrice && bet.btcPrice}</span>
             </button>
           </div>
         </div>

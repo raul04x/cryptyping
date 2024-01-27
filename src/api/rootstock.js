@@ -4,11 +4,15 @@ export default class Rootstock {
       method: method,
       headers: {
         ...(headers ? headers : {}),
-        "X-BLOBR-KEY": "SP0QUJniVhbnkTKRGncstCAUFnd4ykbi",
       },
     };
 
-    const response = await fetch(`{rootstock-url}${url}`, reqHeaders);
+    const response = await fetch(`https://rootstock.blockscout.com/api/v2/${url}`, reqHeaders);
     return response.json();
   };
+
+  static search = async (token) => {
+    const result = await this.#invoke('GET', null, `search?q=${token}`);
+    return result;
+  }
 }

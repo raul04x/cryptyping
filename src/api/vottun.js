@@ -4,11 +4,10 @@ export default class Vottun {
       method: method,
       headers: {
         ...(headers ? headers : {}),
-        "X-BLOBR-KEY": "SP0QUJniVhbnkTKRGncstCAUFnd4ykbi",
       },
     };
 
-    const response = await fetch(`{vottun-url}${url}`, reqHeaders);
+    const response = await fetch(`https://api.vottun.tech/${url}`, reqHeaders);
     return response.json();
   };
 }
