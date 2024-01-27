@@ -13,6 +13,12 @@ const User = (props) => {
         <NavLink to="favorite">
           <span className="material-symbols-rounded">favorite</span>
         </NavLink>
+        <NavLink to="ranking">
+          <span className="material-symbols-rounded">family_star</span>
+        </NavLink>
+        <NavLink to="bet">
+          <span className="material-symbols-rounded">monetization_on</span>
+        </NavLink>
         <NavLink to="trending">
           <span className="material-symbols-rounded">
             local_fire_department

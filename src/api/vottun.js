@@ -1,4 +1,4 @@
-export default class Rootstock {
+export default class Vottun {
   static #invoke = async (method, headers, url) => {
     const reqHeaders = {
       method: method,
@@ -8,7 +8,7 @@ export default class Rootstock {
       },
     };
 
-    const response = await fetch(`{rootstock-url}${url}`, reqHeaders);
+    const response = await fetch(`{vottun-url}${url}`, reqHeaders);
     return response.json();
   };
 }
