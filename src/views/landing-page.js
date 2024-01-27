@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 
 const LandingPage = (props) => {
   return (
@@ -21,7 +21,7 @@ const LandingPage = (props) => {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarText">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
@@ -29,7 +29,11 @@ const LandingPage = (props) => {
                 <NavLink
                   to="/"
                   className={({ isActive, isPending }) =>
-                    isPending ? "pending" : isActive ? "nav-link active" : "nav-link"
+                    isPending
+                      ? "pending"
+                      : isActive
+                      ? "nav-link active"
+                      : "nav-link"
                   }
                 >
                   Home
@@ -37,9 +41,13 @@ const LandingPage = (props) => {
               </li>
               <li className="nav-item">
                 <NavLink
-                  to="/user"
+                  to="/user/account"
                   className={({ isActive, isPending }) =>
-                    isPending ? "pending" : isActive ? "nav-link active" : "nav-link"
+                    isPending
+                      ? "pending"
+                      : isActive
+                      ? "nav-link active"
+                      : "nav-link"
                   }
                 >
                   User

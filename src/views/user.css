@@ -1,0 +1,43 @@
+.user-wrapper {
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  height: calc(100vh - 110px);
+  margin: 20px auto;
+  max-width: 800px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.user-wrapper > .user-content {
+  background-color: #eee;
+  height: calc(100% - 40px);
+}
+
+.user-wrapper > .user-actions {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #ccc;
+  height: 40px;
+}
+
+.user-actions > a {
+  align-items: center;
+  background-color: #ccc;
+  color: white;
+  display: flex;
+  height: 100%;
+  padding: 0 15px;
+  text-decoration: none;
+  transition: all 300ms;
+}
+
+.user-actions > a:hover:not(.active) {
+  background-color: #eee;
+  color: white;
+}
+
+.user-actions > .active {
+  background-color: rgb(255, 195, 64);
+}
