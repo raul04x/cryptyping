@@ -1,4 +1,4 @@
-# CryptoPrediction Social Network Project
+# Cryptyping Social Network Project
 
 ## Project Overview
 
