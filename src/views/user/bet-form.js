@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import DexTools, { ChainsEnabled } from "../../api/dextools";
+import Vottun from "../../api/vottun";
 
 const BetForm = (props) => {
   const [bet, setBet] = useState({
@@ -8,6 +9,7 @@ const BetForm = (props) => {
     bet: -1,
     btcPrice: null,
     etherPrice: null,
+    timestampt: null,
   });
 
   const configBet = (key, value) => {
@@ -18,6 +20,9 @@ const BetForm = (props) => {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    const tempBet = Object.assign({}, bet);
+    tempBet.timestampt = new Date().getTime();
+    setBet(tempBet);
   };
 
   const getPrices = async () => {
@@ -41,8 +46,18 @@ const BetForm = (props) => {
     setBet(temp);
   };
 
+  const getTransact = async () => {
+    const result = Vottun.transactView({
+      contractAddress: "0xEe305211a988fbD5c038162B0B06Ff4e1167630F",
+      blockchainNetwork: 80001,
+      method: "totalBets",
+    });
+    console.log(result);
+  };
+
   useEffect(() => {
     getPrices();
+    getTransact();
   }, []);
 
   return (
