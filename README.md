@@ -1,70 +1,36 @@
-# Getting Started with Create React App
+# CryptoPrediction Social Network Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Overview
 
-## Available Scripts
+The CryptoPrediction project is a social network platform focused on cryptocurrency price predictions. The aim is to enhance the credibility of influencers in the crypto space and prevent scams. The platform enables users to make predictions on cryptocurrency prices, and their success in these predictions affects their ranking on the platform.
 
-In the project directory, you can run:
+## Key Components
 
-### `npm start`
+### Frontend Pages
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **`bet-form-vottun.js`**: This page integrates the smart contract with Vottun's API, serving as the primary interface for users to make predictions.
+- **`bet-form-rootstock.js`**: An alternative frontend page that interacts with the smart contract deployed on Rootstock, providing a different user experience from the Vottun API integration.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Smart Contract
 
-### `npm test`
+- **`SmartContract_crypty.sol`**:
+  - Deployed on Rootstock Testnet via Hardhat at `0x66D0e6a7C01F579D4Ad12B8424C8404A49b932D4`. This deployment was chosen due to compatibility issues encountered on Vottun's Rootstock network.
+  - Also deployed on Polygon Mumbai through Vottun as a fallback option.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Project Goals
 
-### `npm run build`
+- **Ranking System**: Create a system where the accuracy of users' predictions on cryptocurrency prices affects their ranking.
+- **Influencer Credibility**: Highlight credible influencers by tracking the success rate of their predictions.
+- **Scam Prevention**: Deter deceptive practices in the crypto space through transparent and verifiable tracking of prediction outcomes.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Current Status and Next Steps
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The next critical phase involves connecting the `SmartContract_crypty.sol` functions with both frontend implementations (`bet-form-vottun.js` and `bet-form-rootstock.js`), ensuring fluid interaction between the users' frontend activities and the smart contract logic.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Contributing
 
-### `npm run eject`
+Contributions, especially in the areas of smart contract integration and user experience enhancement, are welcome.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## License
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License.
