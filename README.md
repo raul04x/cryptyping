@@ -8,7 +8,7 @@ The CryptoPrediction project is a social network platform focused on cryptocurre
 
 ### Frontend Pages
 
-- **`bet-form-vottun.js`**: This page integrates the smart contract with Vottun's API, serving as the primary interface for users to make predictions.
+- **`bet-form.js`**: This page integrates the smart contract with Vottun's API, serving as the primary interface for users to make predictions. This file is located in the src/views/user directory.
 - **`bet-form-rootstock.js`**: An alternative frontend page that interacts with the smart contract deployed on Rootstock, providing a different user experience from the Vottun API integration.
 
 ### Smart Contract
