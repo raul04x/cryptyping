@@ -51,6 +51,7 @@ const BetForm = (props) => {
       contractAddress: "0xEe305211a988fbD5c038162B0B06Ff4e1167630F",
       blockchainNetwork: 80001,
       method: "totalBets",
+      params: [],
     });
     console.log(result);
   };
@@ -58,6 +59,9 @@ const BetForm = (props) => {
   useEffect(() => {
     getPrices();
     getTransact();
+    setInterval(() => {
+      getPrices();
+    }, 5*60*1000);
   }, []);
 
   return (
