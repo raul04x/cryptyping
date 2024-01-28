@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'; 
 import Web3 from 'web3'; 
+import DexTools, { ChainsEnabled } from "../../api/dextools";
  
 // Incluir la ABI directamente 
 const cryptoPredictionABI = [
@@ -280,11 +281,11 @@ const cryptoPredictionABI = [
 	}
 ];
  
-const web3 = new Web3(Web3.givenProvider); 
+const web3 = new Web3('https://public-node.testnet.rsk.co'); 
 const contractAddress = '0x587D30950D2356A54CFa10B6da4F548e9944Aa81'; 
 const bettingContract = new web3.eth.Contract(cryptoPredictionABI, contractAddress);
 
-import DexTools, { ChainsEnabled } from "../../api/dextools";
+console.log(bettingContract);
 
 const BetForm = (props) => {
   const [bet, setBet] = useState({
@@ -333,25 +334,6 @@ const BetForm = (props) => {
   useEffect(() => {
     getPrices();
   }, []);
-  
-  const sendBet = async (asset, price, betType, timestamp) => {
-    try {
-      const accounts = await web3.eth.getAccounts();
-      const account = accounts[0];
-  
-      // Elimina el formateo del precio para obtener un número
-      const numericPrice = parseFloat(price.replace(/[^0-9.-]+/g, ""));
-  
-      const betResponse = await bettingContract.methods.placeBet(asset, numericPrice, betType, timestamp)
-        .send({ from: account });
-  
-      const betId = betResponse.events.BetPlaced.returnValues.betId;
-      return betId;
-    } catch (error) {
-      console.error('Error al enviar la apuesta:', error);
-      return null;
-    }
-  };  
 
   const comparePrices = async () => {
     try {
@@ -365,35 +347,33 @@ const BetForm = (props) => {
       );
   
       const currentPrice = bet.asset === 'ether' ? currentEtherPrice.price : currentBtcPrice.price;
-      const betPrice = parseFloat(bet.asset === 'ether' ? bet.etherPrice : bet.btcPrice);
+    const betPrice = parseFloat(bet.asset === 'ether' ? bet.etherPrice : bet.btcPrice);
   
-      let result;
-      const priceIncreased = (currentPrice > betPrice);
-      if ((currentPrice > betPrice && bet.betType === 1) || (currentPrice < betPrice && bet.betType === 0)) {
-        result = 'win';
-      } else {
-        result = 'lose';
-      }
-  
-      console.log(`The bet result is: ${result}`);
-      return { priceAfter5Min: currentPrice, priceIncreased };
-    } catch (error) {
-      console.error('Error comparing prices:', error);
-      return { priceAfter5Min: null, priceIncreased: null };
+    let betWon = false;
+    const priceIncreased = (currentPrice > betPrice);
+    if ((priceIncreased && bet.betType === 1) || (!priceIncreased && bet.betType === 0)) {
+      betWon = true; // El usuario ganó la apuesta
     }
-  };
+
+    console.log(`The bet result is: ${betWon ? 'win' : 'lose'}`);
+    return { priceAfter5Min: currentPrice, priceIncreased, betWon };
+  } catch (error) {
+    console.error('Error comparing prices:', error);
+    return { priceAfter5Min: null, priceIncreased: null, betWon: false };
+  }
+};
   
-  const updateBetResult = async (betId, priceAfter5Min, priceIncreased) => {
-    try {
+  useEffect(() => {
+    const fetchUserScore = async () => {
       const accounts = await web3.eth.getAccounts();
-      const account = accounts[0];
+      if (accounts.length > 0) {
+        const userAddress = accounts[0];
+        await getScore(userAddress);
+      }
+    };
   
-      await bettingContract.methods.updateBetResult(betId, priceAfter5Min, priceIncreased)
-        .send({ from: account });
-    } catch (error) {
-      console.error('Error al actualizar el resultado de la apuesta:', error);
-    }
-  };
+    fetchUserScore();
+  }, []);
   
   const getScore = async (userAddress) => {
     try {
@@ -405,12 +385,11 @@ const BetForm = (props) => {
       return null;
     }
   };
-
+  
   const updateScore = async (userAddress, newScore) => {
     try {
       const accounts = await web3.eth.getAccounts();
       const account = accounts[0];
-
       await bettingContract.methods.updateScore(userAddress, newScore)
         .send({ from: account });
       console.log('Puntaje actualizado a:', newScore);
@@ -419,20 +398,78 @@ const BetForm = (props) => {
     }
   };
 
+  const determineNewScore = async (betWon, userAddress) => {
+    try {
+      const currentScore = await getScore(userAddress);
+      let newScore = currentScore + (betWon ? 10 : -10);
+      return newScore;
+    } catch (error) {
+      console.error('Error al determinar el nuevo puntaje:', error);
+      return null;
+    }
+  };
+
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     await getPrices();
-    setBet({ ...bet, timestamp: Date.now() });
+  
+    // Asegurarse de que todos los valores necesarios están presentes
+    if (!bet.asset || bet.betType === -1) {
+      return;
+    }
+  
+    console.log('Before Accounts');
 
-    // Esperar 5 minutos antes de comparar precios
-    setTimeout(async () => {
-      await comparePrices();
-    }, 300000); // 300000 ms = 5 minutos
+    // Obtener la cuenta del usuario
+    const accounts = await web3.eth.getAccounts();
+    if (accounts.length === 0) {
+      console.error('No Ethereum accounts found. Please connect your wallet.');
+      return;
+    }
+    
+    console.log('Accounts', accounts);
+  
+    const account = accounts[0];
+  
+    // Preparar los datos para enviar la apuesta
+    const price = bet.asset === 'ether' ? bet.etherPrice : bet.btcPrice;
+    if (!price) {
+      console.error('Price not found for the selected asset');
+      return;
+    }
+  
+    // Eliminar el formateo del precio para obtener un número
+    const numericPrice = parseFloat(price.replace(/[^0-9.-]+/g, ""));
+  
+    // Establecer la marca de tiempo actual
+    const timestamp = Date.now();
+    setBet({ ...bet, timestamp });
+  
+    // Enviar apuesta
+    try {
+      const betResponse = await bettingContract.methods.placeBet(bet.asset, numericPrice, bet.betType, timestamp)
+        .send({ from: account });
+      const betId = betResponse.events.BetPlaced.returnValues.betId;
+  
+      // Esperar 5 minutos antes de comparar precios
+      setTimeout(async () => {
+        try {
+          const { priceAfter5Min, priceIncreased, betWon } = await comparePrices();
+          await bettingContract.methods.updateBetResult(betId, priceAfter5Min, priceIncreased)
+            .send({ from: account });
+
+            const newScore = await determineNewScore(betWon, account);
+            await updateScore(account, newScore);
+  
+        } catch (error) {
+          console.error('Error al actualizar el resultado de la apuesta:', error);
+        }
+      }, 300000); // 300000 ms = 5 minutos
+    } catch (error) {
+      console.error('Error al enviar la apuesta:', error);
+    }
   };
-
-  useEffect(() => {
-    getPrices();
-  }, []);
+  
 
   return (
     <form onSubmit={handleSubmit}>
@@ -475,18 +512,18 @@ const BetForm = (props) => {
             <button
               type="button"
               className={`btn ${
-                bet.bet === 1 ? "btn-success" : "btn-outline-success"
+                bet.betType === 1 ? "btn-success" : "btn-outline-success"
               }`}
-              onClick={() => configBet("bet", 1)}
+              onClick={() => configBet("betType", 1)}
             >
               <span className="material-symbols-rounded">arrow_upward</span>
             </button>
             <button
               type="button"
               className={`btn ${
-                bet.bet === 0 ? "btn-danger" : "btn-outline-danger"
+                bet.betType === 0 ? "btn-danger" : "btn-outline-danger"
               }`}
-              onClick={() => configBet("bet", 0)}
+              onClick={() => configBet("betType", 0)}
             >
               <span className="material-symbols-rounded">arrow_downward</span>
             </button>
@@ -503,5 +540,3 @@ const BetForm = (props) => {
 };
 
 export default BetForm;
-
-
