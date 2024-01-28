@@ -31,10 +31,13 @@ The next critical phase involves connecting the `SmartContract_crypty.sol` funct
 
 Contributions, especially in the areas of smart contract integration and user experience enhancement, are welcome.
 
-## License
+## Example Vottun API calls
 ![API CALL](https://github.com/raul04x/cryptyping/blob/main/LLamadas_API_vottun.png)
+
+## License
+
 
 This project is licensed under the MIT License.
 
-## Example Vottun API calls
+
 
