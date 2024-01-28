@@ -34,3 +34,6 @@ Contributions, especially in the areas of smart contract integration and user ex
 ## License
 
 This project is licensed under the MIT License.
+
+#Example Vottun API calls
+
